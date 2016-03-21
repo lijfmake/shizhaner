@@ -26,11 +26,13 @@ public class LoanReleaseDep extends Handler implements TimeListener{
          * 如果有，就转发请求给后继的责任对象
          * 如果没有，则处理请求
          */
+    	System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"加入Release工作任务 加入时间："+te.getTime());
+    	this.loanRequestQueue.add(loanRequest);
         if(getSuccessor() != null)
         {   
         	
         	//this.setLoanReq(loanRequest); 
-        	this.loanRequestQueue.add(loanRequest);
+        	
         	
                        
         }else
@@ -44,14 +46,14 @@ public class LoanReleaseDep extends Handler implements TimeListener{
 		// TODO Auto-generated method stub
 		//this.handleRequest(loanRequest);
 		//System.out.println("review time "+te.getTime());
-		System.out.println("release time"+te.getTime());
+		//System.out.println("release time"+te.getTime());
 		//te.timeIncrease();
 		//if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)
 		if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)
 		{
 			LoanRequest loanRequest = loanRequestQueue.poll();
 			System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"发放通过 时间："+te.getTime());
-			getSuccessor().handleRequest(loanRequest,te);
+			//getSuccessor().handleRequest(loanRequest,te);
 		}
 		this.setLastTimeEvent(te);
 	}

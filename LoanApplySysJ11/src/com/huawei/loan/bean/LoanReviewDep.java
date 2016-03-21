@@ -30,6 +30,7 @@ public class LoanReviewDep extends Handler implements TimeListener
         {   
         	
         	//this.setLoanReq(loanRequest); 
+        	System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"加入Review工作任务 加入时间："+te.getTime());
         	this.loanRequestQueue.add(loanRequest);
         	
                        
@@ -44,7 +45,7 @@ public class LoanReviewDep extends Handler implements TimeListener
 		// TODO Auto-generated method stub
 		//this.handleRequest(loanRequest);
 		//System.out.println("review time "+te.getTime());
-		System.out.println("review time"+te.getTime());
+		//System.out.println("review time"+te.getTime());
 		//te.timeIncrease();
 		//if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)
 		if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)

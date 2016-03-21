@@ -18,6 +18,9 @@ public class TestTime {
 	         LoanReleaseDep loanReleaseDep = new LoanReleaseDep();
 	         loanReviewDep.setSuccessor(loanReleaseDep);
 	         loanApplicationDep.setSuccessor(loanReviewDep);
+	         timeSource.addTimeListener(loanReleaseDep);
+	         timeSource.addTimeListener(loanReviewDep);
+	         timeSource.addTimeListener(loanApplicationDep);
 	         LoanRequest request1 = new LoanRequest();
 	         request1.setLoanRequestNum(1);
 	         LoanRequest request2 = new LoanRequest();
@@ -29,10 +32,10 @@ public class TestTime {
 	         loanApplicationDep.addApply(request1);
 	         loanApplicationDep.addApply(request2);
 	         loanApplicationDep.addApply(request3);
-	         loanApplicationDep.addApply(request4);
-	         timeSource.addTimeListener(loanApplicationDep); 
-	         timeSource.addTimeListener(loanReleaseDep);
-	         timeSource.addTimeListener(loanReviewDep);
+	         
+	          
+	         
+	         
 	         /*ds.addTimeListener(new TimeListener() {     
 	            public void handleEvent(TimeEvent event) {     
 	            System.out.println("Method come from ƒ‰√˚¿‡...");     
@@ -46,10 +49,12 @@ public class TestTime {
 	      tEvent2.setTime(tEvent.getTime()+1);
 	       timeSource.notifyEvent(tEvent2);
 	       
+	       loanApplicationDep.addApply(request4); 
+	       
 	       TimeEvent tEvent3 =new TimeEvent(timeSource);
 		      tEvent3.setTime(tEvent2.getTime()+1);
 		       timeSource.notifyEvent(tEvent3);
-		       
+		     
 		   TimeEvent tEvent4 =new TimeEvent(timeSource);
 			  tEvent4.setTime(tEvent3.getTime()+1);
 			   timeSource.notifyEvent(tEvent4);    

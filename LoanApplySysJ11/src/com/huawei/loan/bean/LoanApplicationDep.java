@@ -38,7 +38,7 @@ public class LoanApplicationDep extends Handler implements TimeListener{
         {   
         	
         	//this.addApply(loanRequest);        	
-            System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"申请通过 时间："+te.getTime());
+            //System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"申请通过 时间："+te.getTime());
             getSuccessor().handleRequest(loanRequest,te);            
         }else
         {            
@@ -49,16 +49,16 @@ public class LoanApplicationDep extends Handler implements TimeListener{
 	@Override
 	public void handleEvent(TimeEvent te) 
 	{
-		System.out.println("apply time"+te.getTime());
+		//System.out.println("apply time"+te.getTime());
 		// TODO Auto-generated method stub
 		while(!loanRequestQueue.isEmpty())
 		{
 			LoanRequest loanRequest = loanRequestQueue.poll();
 			//if(applyCheck(loanRequest)){
 			//te.timeIncrease();
-			//System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"申请通过 时间："+te.getTime());
+			System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"申请通过 时间："+te.getTime());
 			this.handleRequest(loanRequest, te);
-			
+			//每次向Review提交一个
 			break;
 			//}
 		}
