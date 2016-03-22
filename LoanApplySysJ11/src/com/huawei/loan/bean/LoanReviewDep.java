@@ -1,67 +1,101 @@
 package com.huawei.loan.bean;
 
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
+import com.huawei.loan.IConstants;
 
 /**
  * 贷款审查部门
  * @author lijf
  *
  */
-public class LoanReviewDep extends Handler implements TimeListener
+public class LoanReviewDep extends Department implements TimeListener,IConstants
 { 
-	private TimeEvent lastTimeEvent;
-	private Queue<LoanRequest> loanRequestQueue;
+	//private TimeEvent lastTimeEvent;
+	//private Queue<LoanRequest> loanRequestQueue;
+	//private LoanRequestDAO loanRequestDAO;
+	//private Map<Integer, LoanRequest> processingRequestMap = new HashMap<Integer, LoanRequest>();
+	
+	
 	public LoanReviewDep() {
 		// TODO Auto-generated constructor stub
-		loanRequestQueue = new ArrayBlockingQueue<LoanRequest>(3);
+		//loanRequestQueue = new ArrayBlockingQueue<LoanRequest>(3);
 	}
 	/**
      * 处理方法，调用此方法处理请求
      */
-    @Override
+	@Override
     public void handleRequest(LoanRequest loanRequest,TimeEvent te) {
-        /**
-         * 判断是否有后继的责任对象
-         * 如果有，就转发请求给后继的责任对象
-         * 如果没有，则处理请求
-         */
-        if(getSuccessor() != null)
-        {   
-        	
-        	//this.setLoanReq(loanRequest); 
-        	System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"加入Review工作任务 加入时间："+te.getTime());
-        	this.loanRequestQueue.add(loanRequest);
-        	
-                       
-        }else
-        {            
-            System.out.println("无贷发放查跟进");
-        }
+		System.out.println("review LoanId: "+loanRequest.getLoanRequestId()+" time: "+te.getTime());
+    	//月收入小于5k
+		if(loanRequest.getIncome()<=INCOME_LOW_MAX){
+			//月收入小于5k的贷款超过50
+			if(loanRequest.getMoney()>AMOUNT_LOW_MAX/10000){
+				//重新申请
+				loanRequest.setStatusInfo("贷款本金超出范围,审查贷款失败,待重新申请");
+		    	loanRequestDAO.reviewToRelease(loanRequest, te.getTime(),true);
+		    	return;
+		    	
+			}
+			//年限
+			if(loanRequest.getYear()>INSTALLMENTS_LOW_MAX/12){
+				//重新申请
+				loanRequest.setStatusInfo("贷款年限超出范围,审查贷款失败,待重新申请");
+		    	loanRequestDAO.reviewToRelease(loanRequest, te.getTime(),true);
+		    	return;
+		    	
+			}
+			
+		}
+		//月收入大于5k
+		if(loanRequest.getIncome()>INCOME_LOW_MAX){
+		//月收入大于5k的贷款超过100
+			if(loanRequest.getMoney()>AMOUNT_HIGH_MAX/10000){
+				//return OperationResult.createReturnResult(ReturnCodeEnum.E004);
+				//重新申请
+				loanRequest.setStatusInfo("贷款本金超出范围,审查贷款失败,待重新申请");
+		    	loanRequestDAO.reviewToRelease(loanRequest, te.getTime(),true);
+		    	return;
+		    	
+			}
+			//年限
+			if(loanRequest.getYear()>INSTALLMENTS_HIGH_MAX/12){
+				//return OperationResult.createReturnResult(ReturnCodeEnum.E005);
+				//重新申请
+				loanRequest.setStatusInfo("贷款年限超出范围,审查贷款失败,待重新申请");
+		    	loanRequestDAO.reviewToRelease(loanRequest, te.getTime(),true);
+		    	return;
+		    	
+			}
+		}
+		loanRequest.setStatusInfo("贷款审查成功待发放");
+    	loanRequestDAO.reviewToRelease(loanRequest, te.getTime(),false);
+    	
+		
+    	
     }
     //时间增加处理
 	@Override
 	public void handleEvent(TimeEvent te) {
 		// TODO Auto-generated method stub
-		//this.handleRequest(loanRequest);
-		//System.out.println("review time "+te.getTime());
-		//System.out.println("review time"+te.getTime());
-		//te.timeIncrease();
-		//if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)
-		if(loanRequestQueue.size()!=0&&lastTimeEvent!=null&&te.getTime()==this.getLastTimeEvent().getTime()+1)
 		{
-			LoanRequest loanRequest = loanRequestQueue.poll();
-			System.out.println("贷款号："+loanRequest.getLoanRequestNum()+"审查通过 时间："+te.getTime());
-			getSuccessor().handleRequest(loanRequest,te);
+			//从DAO里取出要review的request
+			//LoanRequest loanRequest = loanRequestQueue.poll();			
+			LoanRequest loanRequest = loanRequestDAO.getReviewRequest();
+			if(loanRequest!=null){
+				
+				this.handleRequest(loanRequest, te);
+				//loanRequestDAO.reviewToRelease(loanRequest, te.getTime());
+			}
+			//getSuccessor().handleRequest(loanRequest,te);
 			
 		}
-		this.setLastTimeEvent(te);
+		//this.setLastTimeEvent(te);
 	}
 	
-	public TimeEvent getLastTimeEvent() {
+/*	public TimeEvent getLastTimeEvent() {
 		return lastTimeEvent;
 	}
 	public void setLastTimeEvent(TimeEvent lastTimeEvent) {
 		this.lastTimeEvent = lastTimeEvent;
-	}
+	}*/
+
 }

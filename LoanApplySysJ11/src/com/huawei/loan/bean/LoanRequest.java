@@ -1,7 +1,7 @@
 package com.huawei.loan.bean;
 
 public class LoanRequest {
-	private int loanRequestNum;//代码编号
+	private int loanRequestId;//代码编号
 	
 	private int income;//月收入
 	
@@ -23,11 +23,37 @@ public class LoanRequest {
 	
 	private int releaseOutTime;//发放出时间
 	
-	public int getLoanRequestNum() {
-		return loanRequestNum;
+	private boolean isReApply;
+	
+	private String statusInfo;
+	
+	//private boolean isPassRelease;
+	public LoanRequest(){
+		
 	}
-	public void setLoanRequestNum(int loanRequestNum) {
-		this.loanRequestNum = loanRequestNum;
+	//贷款编号-贷款人月收入-贷款本金-贷款年限-申请时间
+	public LoanRequest(int[] array){
+		this.loanRequestId = array[0];
+		this.income = array[1];
+		this.money = array[2];
+		this.year = array[3];
+		this.applyInTime = array[4];
+	}
+	
+	public String toString(){
+		String s="loanRequestId: "+loanRequestId+" income: "+income+" year: "+year+" money: "+money+" applyInTime: "
+				+applyInTime+" applyOutTime: "+applyOutTime+" reviewInTime: "+reviewInTime+" reviewOutTime: "+reviewOutTime
+				+" releaseInTime: "+releaseInTime+" releaseOutTime: "+releaseOutTime+" isReApply: "+isReApply
+				+" statusInfo: "+statusInfo
+				;
+		return s;
+		
+	}
+	public int getLoanRequestId() {
+		return loanRequestId;
+	}
+	public void setLoanRequestId(int loanRequestId) {
+		this.loanRequestId = loanRequestId;
 	}
 	public int getIncome() {
 		return income;
@@ -83,11 +109,22 @@ public class LoanRequest {
 	public void setReleaseOutTime(int releaseOutTime) {
 		this.releaseOutTime = releaseOutTime;
 	}
-	/*public int getNowTime() {
-		return nowTime;
+	public boolean isReApply() {
+		return isReApply;
 	}
-	public void setNowTime(int nowTime) {
-		this.nowTime = nowTime;
-	}*/
+	public void setReApply(boolean isReApply) {
+		this.isReApply = isReApply;
+	}
+	public String getStatusInfo() {
+		return statusInfo;
+	}
+	public void setStatusInfo(String statusInfo) {
+		this.statusInfo = statusInfo;
+	}
+
+
+	
+	
+	
 	
 }
